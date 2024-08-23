@@ -247,7 +247,7 @@ prog.command("build").describe("Creates the build output for server and client."
           appName: "fuse",
           appPath: path3.resolve(
             baseDirectory2,
-            "node_modules",
+            "../../node_modules",
             "fuse",
             "dist",
             "adapters",
@@ -328,7 +328,7 @@ export * from 'fuse/client';
           },
           appPath: path3.resolve(
             baseDirectory,
-            "node_modules",
+            "../../node_modules",
             "fuse",
             "dist",
             "dev.mjs"

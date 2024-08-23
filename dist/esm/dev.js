@@ -7,23 +7,18 @@ import { createYoga } from "graphql-yoga";
 import { blockFieldSuggestionsPlugin } from "@escape.tech/graphql-armor-block-field-suggestions";
 import { useDeferStream } from "@graphql-yoga/plugin-defer-stream";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { createStellateLoggerPlugin } from "stellate/graphql-yoga";
 var getYogaPlugins = (stellate) => {
   return [
     useDeferStream(),
     process.env.NODE_ENV === "production" && useDisableIntrospection(),
-    process.env.NODE_ENV === "production" && blockFieldSuggestionsPlugin(),
-    Boolean(process.env.NODE_ENV === "production" && stellate) && createStellateLoggerPlugin({
-      serviceName: stellate.serviceName,
-      token: stellate.loggingToken,
-      fetch
-    })
+    process.env.NODE_ENV === "production" && blockFieldSuggestionsPlugin()
   ].filter(Boolean);
 };
 var wrappedContext = (context) => {
   return async (ct) => {
     const baseContext = {
       request: ct.request,
+      response: ct.res,
       headers: ct.request.headers,
       params: ct.params
     };
@@ -40,7 +35,8 @@ var wrappedContext = (context) => {
         ...baseContext,
         ...userCtx
       };
-    } else if (typeof context === "object") {
+    }
+    if (typeof context === "object") {
       return {
         ...baseContext,
         ...context

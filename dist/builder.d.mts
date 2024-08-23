@@ -8,6 +8,7 @@ import * as _pothos_plugin_dataloader from '@pothos/plugin-dataloader';
 import { LoadableNodeOptions } from '@pothos/plugin-dataloader';
 import { MaybePromise, SchemaTypes, OutputType, ShapeFromTypeParam, BasePlugin, InputFieldMap, Resolver, InputShapeFromFields, FieldKind, FieldOptionsFromKind, InputFieldsFromShape, FieldRef, InterfaceParam, ObjectTypeOptions, ImplementableObjectRef, EnumValues, EnumRef, ShapeFromEnumValues, InputObjectRef, InputFieldBuilder } from '@pothos/core';
 import { GraphQLParams, YogaInitialContext } from 'graphql-yoga';
+import { ServerResponse } from 'node:http';
 export { decodeGlobalID, encodeGlobalID } from '@pothos/plugin-relay';
 import { GraphQLError } from 'graphql';
 
@@ -55,8 +56,9 @@ type InitialContext = {
     headers: Headers;
     params: GraphQLParams;
     request: YogaInitialContext['request'];
+    response: ServerResponse;
 };
-type UserContext = Record<string, any>;
+type UserContext = any;
 type GetContext<AdditionalContext> = ((ctx: InitialContext) => UserContext & AdditionalContext) | ((ctx: InitialContext) => Promise<UserContext & AdditionalContext>) | (UserContext & AdditionalContext);
 interface StellateOptions {
     loggingToken: string;
@@ -196,17 +198,14 @@ declare function node<T extends {}, Key extends string | number = string, Interf
     name: string;
     key?: keyof T;
     description?: string;
-    load: (ids: Array<string | Key>, ctx: Record<string, unknown>) => Promise<Array<T | Error>>;
+    load: (ids: Array<string | Key>, ctx: UserContext) => Promise<Array<T | Error>>;
 } : {
     name: string;
     key: keyof T;
     description?: string;
-    load: (ids: Array<string | Key>, ctx: Record<string, unknown>) => Promise<Array<T | Error>>;
+    load: (ids: Array<string | Key>, ctx: UserContext) => Promise<Array<T | Error>>;
 }) & Pick<LoadableNodeOptions<BuilderTypes, T, Interfaces, string, string | number, string | number, string | number>, 'authScopes' | 'fields' | 'interfaces' | 'isTypeOf'>): Omit<_pothos_plugin_dataloader.ImplementableLoadableNodeRef<PothosSchemaTypes.ExtendDefaultTypes<{
-    Context: {
-        request: Request;
-        params: GraphQLParams<Record<string, any>, Record<string, any>>;
-    } & UserContext;
+    Context: any;
     AuthScopes: Scopes;
     DefaultFieldNullability: true;
     Scalars: {
