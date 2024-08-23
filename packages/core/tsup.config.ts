@@ -1,13 +1,15 @@
-import { defineConfig, Options } from 'tsup'
+import { defineConfig, type Options } from 'tsup'
 
 export default defineConfig(async () => {
   const baseOptions: Options = {
     platform: 'node',
+    outDir: '../../dist',
 
     splitting: false,
-    format: ['esm', 'cjs'],
+    legacyOutput: true,
+    format: ['esm'],
     skipNodeModulesBundle: true,
-    target: 'node18',
+    target: 'esnext',
     env: {
       // env var `npm_package_version` gets injected in runtime by npm/yarn automatically
       // this replacement is for build time, so it can be used for both
@@ -49,9 +51,8 @@ import '@pothos/plugin-relay'`,
       outDir: 'dist',
       clean: true,
       cjsInterop: false,
-      target: 'es2015',
+      target: 'esnext',
       skipNodeModulesBundle: false,
-      legacyOutput: true,
       platform: 'browser',
       dts: {
         entry: 'src/client.ts',
@@ -133,9 +134,8 @@ import '@pothos/plugin-relay'`,
       outDir: 'dist/next',
       clean: true,
       cjsInterop: false,
-      target: 'es2015',
+      target: 'esnext',
       skipNodeModulesBundle: false,
-      legacyOutput: true,
       platform: 'browser',
       dts: {
         entry: 'src/next/client.ts',
@@ -149,9 +149,8 @@ import '@pothos/plugin-relay'`,
       outDir: 'dist/next',
       clean: true,
       cjsInterop: false,
-      target: 'es2015',
+      target: 'esnext',
       skipNodeModulesBundle: false,
-      legacyOutput: true,
       platform: 'browser',
       dts: {
         entry: 'src/next/pages.ts',
