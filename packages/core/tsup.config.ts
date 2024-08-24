@@ -4,10 +4,10 @@ export default defineConfig(async () => {
   const baseOptions: Options = {
     platform: 'node',
     outDir: '../../dist',
-
+    dts: true,
     splitting: false,
-    legacyOutput: true,
-    format: ['esm'],
+    legacyOutput: false,
+    format: ['esm', 'cjs'],
     skipNodeModulesBundle: true,
     target: 'esnext',
     env: {
