@@ -1,6 +1,6 @@
 {
-  "name": "fuse",
-  "version": "0.12.3",
+  "name": "@lkuoch/fuse",
+  "version": "0.12.1",
   "description": "The magical GraphQL framework",
   "homepage": "https://github.com/StellateHQ/fuse",
   "bugs": "https://github.com/StellateHQ/fuse/issues",
@@ -16,6 +16,7 @@
     "build": "tsup",
     "typecheck": "tsc",
     "test": "vitest run",
+    "prepublishOnly": "tsup",
     "publish": "npm publish"
   },
   "files": [
@@ -113,7 +114,6 @@
     "vitest": "^1.0.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/",
-    "tag": "latest"
+    "registry": "https://npm.pkg.github.com/"
   }
 }
