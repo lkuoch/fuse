@@ -1,0 +1,64 @@
+name: Build and Release
+
+# Trigger the workflow on every push to the master branch
+on:
+  push:
+    branches:
+      - custom-sauce
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the appropriate Node.js version
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Create tarball of dist folder
+        run: tar -czf dist.tar.gz dist
+
+      - name: Get the version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Get short SHA
+        id: get_short_sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          release_name: Release ${{ env.VERSION }} ${{ env.SHORT_SHA }}
+          body: |
+            Release ${{ env.VERSION }} for commit ${{ env.SHORT_SHA }}.
+            - Built and packaged the `dist` folder as a tarball.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist.tar.gz
+          asset_name: dist-${{ env.VERSION }}.tar.gz
+          asset_content_type: application/gzip

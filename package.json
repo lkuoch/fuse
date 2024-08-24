@@ -1,5 +1,6 @@
 {
   "name": "fuse",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "build": "pnpm --filter fuse build && pnpm --filter create-fuse-app build",
