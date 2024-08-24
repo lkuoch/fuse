@@ -1,0 +1,69 @@
+name: Build and Release
+
+# Trigger the workflow on every push to the master branch
+on:
+  push:
+    branches:
+      - custom-sauce
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the appropriate Node.js version
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Create Tarball
+        run: |
+          mkdir ./temp_package
+          cp -r ./packages/core/dist ./temp_package/
+          cp ./packages/core/package.json ./packages/core/rsc.d.ts ./packages/core/client.d.ts ./packages/core/loader.js ./temp_package/
+          tar -czf fuse.tar.gz -C ./temp_package .
+          rm -rf ./temp_package
+
+      - name: Get the version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version ./packages/core/package.json)" >> $GITHUB_ENV
+
+      - name: Get short SHA
+        id: get_short_sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          release_name: Release ${{ env.VERSION }} ${{ env.SHORT_SHA }}
+          body: |
+            Release ${{ env.VERSION }} for commit ${{ github.sha }}.
+            - Built and packaged the `dist` folder as a tarball.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./fuse.tar.gz
+          asset_name: fuse-${{ env.VERSION }}.tar.gz
+          asset_content_type: application/gzip
