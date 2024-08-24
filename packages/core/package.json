@@ -1,5 +1,6 @@
 {
   "name": "fuse",
+  "type": "module",
   "version": "0.12.1",
   "description": "The magical GraphQL framework",
   "homepage": "https://github.com/StellateHQ/fuse",
@@ -15,64 +16,46 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc",
-    "test": "vitest run",
-    "prepublishOnly": "tsup"
+    "test": "vitest run"
   },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "dist/",
-    "rsc.d.ts",
-    "client.d.ts",
-    "CHANGELOG.md",
-    "loader.js"
-  ],
-  "module": "dist/builder.mjs",
+  "module": "dist/builder.js",
   "main": "dist/builder.js",
   "types": "dist/builder.d.ts",
-  "bin": "dist/cli.mjs",
+  "bin": "dist/cli.js",
   "exports": {
     ".": {
       "types": "./dist/builder.d.ts",
-      "import": "./dist/builder.mjs",
-      "require": "./dist/builder.js"
+      "import": "./dist/builder.js"
     },
     "./client": {
       "types": "./dist/client.d.ts",
-      "import": "./dist/esm/client.js",
-      "require": "./dist/client.js"
+      "import": "./dist/esm/client.js"
     },
     "./next/loader": {
       "require": "./loader.js"
     },
     "./dev": {
-      "import": "./dist/dev.mjs",
-      "require": "./dist/dev.mjs"
+      "import": "./dist/dev.js"
     },
     "./next": {
       "types": "./dist/next/index.d.ts",
-      "import": "./dist/next/index.mjs",
-      "require": "./dist/next/index.js"
+      "import": "./dist/next/index.js"
     },
     "./next/server": {
       "types": "./rsc.d.ts",
-      "import": "./dist/next/rsc.mjs",
-      "require": "./dist/next/rsc.js"
+      "import": "./dist/next/rsc.js"
     },
     "./next/client": {
       "types": "./client.d.ts",
-      "import": "./dist/next/esm/client.js",
-      "require": "./dist/next/client.js"
+      "import": "./dist/next/esm/client.js"
     },
     "./next/pages": {
       "types": "./dist/next/pages.d.ts",
-      "import": "./dist/next/esm/pages.js",
-      "require": "./dist/next/pages.js"
+      "import": "./dist/next/esm/pages.js"
     },
     "./next/plugin": {
       "types": "./dist/next/plugin.d.ts",
-      "import": "./dist/next/plugin.mjs",
-      "require": "./dist/next/plugin.js"
+      "import": "./dist/next/plugin.js"
     }
   },
   "dependencies": {
@@ -111,9 +94,5 @@
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vitest": "^1.0.0"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
   }
 }
