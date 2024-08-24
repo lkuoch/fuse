@@ -1,4 +1,4 @@
-name: Build and Publish
+name: Build and Release
 
 # Trigger the workflow on every push to the master branch
 on:
@@ -17,13 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-
-      - name: Authenticate to GitHub Packages
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          echo "@lkuoch:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "publish-branch=custom-sauce" >> ~/.npmrc
+          node-version: '18' # Use the appropriate Node.js version
 
       - name: Install PNPM
         run: npm install -g pnpm
@@ -31,21 +25,41 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Publish Package
-        run: pnpm --filter fuse publish
+      - name: Build project
+        run: pnpm run build
 
-      - name: Get updated version from package.json
+      - name: Create Tarball
+        run: |
+          tar -czf dist.tar.gz ./packages/core
+
+      - name: Get the version from package.json
         id: get_version
-        run: echo "PACKAGE_VERSION=$(jq -r '.version' < ./packages/core/package.json)" >> $GITHUB_ENV
+        run: echo "VERSION=$(jq -r .version ./packages/core/package.json)" >> $GITHUB_ENV
+
+      - name: Get short SHA
+        id: get_short_sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Create GitHub Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.PACKAGE_VERSION }}
-          release_name: Release v${{ env.PACKAGE_VERSION }}
+          tag_name: ${{ env.SHORT_SHA }}
+          release_name: Release ${{ env.VERSION }} ${{ env.SHORT_SHA }}
+          body: |
+            Release ${{ env.VERSION }} for commit ${{ github.sha }}.
+            - Built and packaged the `dist` folder as a tarball.
           draft: false
           prerelease: false
-          body: |
-            This release includes the latest package version: v${{ env.PACKAGE_VERSION }}.
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist.tar.gz
+          asset_name: dist-${{ env.VERSION }}.tar.gz
+          asset_content_type: application/gzip
