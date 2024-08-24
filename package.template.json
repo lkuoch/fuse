@@ -1,0 +1,9 @@
+{
+  "name": "fuse",
+  "version": "0.0.1",
+  "main": "esm/builder.js",
+  "module": "esm/builder.js",
+  "bin": "esm/cli.js",
+  "types": "builder.d.mts",
+  "files": ["*.d.mts", "esm"]
+}
