@@ -1,0 +1,11 @@
+{
+  "name": "fuse",
+  "version": "0.0.1",
+  "main": "esm/cli.js",
+  "module": "esm/cli.js",
+  "types": "../src/index.d.ts",
+  "files": [
+    "esm",
+    "*.d.mts"
+  ]
+}
