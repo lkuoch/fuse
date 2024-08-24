@@ -271,7 +271,7 @@ export function node<
         description?: string
         load: (
           ids: Array<string | Key>,
-          ctx: Record<string, unknown>,
+          ctx: UserContext,
         ) => Promise<Array<T | Error>>
       }
     : {
@@ -280,7 +280,7 @@ export function node<
         description?: string
         load: (
           ids: Array<string | Key>,
-          ctx: Record<string, unknown>,
+          ctx: UserContext,
         ) => Promise<Array<T | Error>>
       }) &
     Pick<
