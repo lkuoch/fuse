@@ -1,13 +1,13 @@
-import { defineConfig, Options } from 'tsup'
+import { defineConfig, type Options } from 'tsup'
 
 export default defineConfig(async () => {
   const baseOptions: Options = {
     platform: 'node',
-
     splitting: false,
-    format: ['esm', 'cjs'],
+    format: ['esm'],
+    legacyOutput: false,
     skipNodeModulesBundle: true,
-    target: 'node18',
+    target: 'esnext',
     env: {
       // env var `npm_package_version` gets injected in runtime by npm/yarn automatically
       // this replacement is for build time, so it can be used for both
@@ -48,8 +48,8 @@ import '@pothos/plugin-relay'`,
       external: [/react/, /@urql\/core/, /urql/],
       outDir: 'dist',
       clean: true,
-      cjsInterop: false,
-      target: 'es2015',
+      esmInterop: false,
+      target: 'esnext',
       skipNodeModulesBundle: false,
       legacyOutput: true,
       platform: 'browser',
@@ -132,8 +132,8 @@ import '@pothos/plugin-relay'`,
       ],
       outDir: 'dist/next',
       clean: true,
-      cjsInterop: false,
-      target: 'es2015',
+      esmInterop: false,
+      target: 'esnext',
       skipNodeModulesBundle: false,
       legacyOutput: true,
       platform: 'browser',
@@ -148,8 +148,8 @@ import '@pothos/plugin-relay'`,
       external: [/react/, /@urql\/core/, /urql/],
       outDir: 'dist/next',
       clean: true,
-      cjsInterop: false,
-      target: 'es2015',
+      esmInterop: false,
+      target: 'esnext',
       skipNodeModulesBundle: false,
       legacyOutput: true,
       platform: 'browser',

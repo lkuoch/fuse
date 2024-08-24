@@ -81,7 +81,7 @@ prog
             appName: 'fuse',
             appPath: path.resolve(
               baseDirectory,
-              'node_modules',
+              '../../node_modules',
               'fuse',
               'dist',
               'adapters',
@@ -174,7 +174,7 @@ prog
             },
             appPath: path.resolve(
               baseDirectory,
-              'node_modules',
+              '../../node_modules',
               'fuse',
               'dist',
               'dev.mjs',
