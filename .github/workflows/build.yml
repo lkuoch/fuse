@@ -1,0 +1,50 @@
+name: Build and Publish
+
+# Trigger the workflow on every push to the master branch
+on:
+  push:
+    branches:
+      - custom-sauce
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Authenticate to GitHub Packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "@lkuoch:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish Package
+        run: pnpm --filter @lkuoch/fuse publish
+
+      - name: Get updated version from package.json
+        id: get_version
+        run: echo "PACKAGE_VERSION=$(jq -r '.version' < ./packages/core/package.json)" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          release_name: Release v${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            This release includes the latest package version: v${{ env.PACKAGE_VERSION }}.
