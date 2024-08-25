@@ -87,21 +87,11 @@ const builder = new SchemaBuilder<{
 
 // Initialize base-types
 builder.queryType({
-  fields: (t) => ({
-    _version: t.string({
-      nullable: false,
-      resolve: () => process.env.npm_package_version as string,
-    }),
-  }),
+  fields: (t) => ({}),
 })
 
 builder.mutationType({
-  fields: (t) => ({
-    _version: t.string({
-      nullable: false,
-      resolve: () => process.env.npm_package_version as string,
-    }),
-  }),
+  fields: (t) => ({}),
 })
 builder.addScalarType('JSON', JSONResolver, {})
 builder.addScalarType('Date', DateResolver, {})

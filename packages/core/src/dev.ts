@@ -7,7 +7,6 @@ import { getYogaPlugins, wrappedContext } from './utils/yoga-helpers'
 
 // prettier-ignore
 const defaultQuery = /* GraphQL */ `query {
-  _version
 }
 `
 

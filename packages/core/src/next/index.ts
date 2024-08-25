@@ -12,7 +12,6 @@ import {
 
 // prettier-ignore
 const defaultQuery = /* GraphQL */ `query {
-  _version
 }
 `
 
