@@ -5,13 +5,23 @@ import { builder } from 'fuse'
 import { getYogaPlugins, wrappedContext } from '../utils/yoga-helpers'
 
 export async function main() {
-  let ctx
+  let ctx, yogaPlugins
   import.meta.glob('/types/**/*.ts', { eager: true })
+
   const context = import.meta.glob('/_context.ts', { eager: true })
+  const yogaPluginsFile = import.meta.glob('/_yoga-plugins.ts', { eager: true })
+
   if (context['/_context.ts']) {
     const mod = context['/_context.ts']
     if ((mod as any).getContext) {
       ctx = (mod as any).getContext
+    }
+  }
+
+  if (yogaPluginsFile['/_yoga-plugins.ts']) {
+    const mod = yogaPluginsFile['/_yoga-plugins.ts']
+    if ((mod as any).getYogaPlugins) {
+      yogaPlugins = (mod as any).getYogaPlugins
     }
   }
 
@@ -24,7 +34,7 @@ export async function main() {
     // We allow batching by default
     batching: true,
     context: wrappedContext(ctx),
-    plugins: getYogaPlugins(),
+    plugins: getYogaPlugins(yogaPlugins),
   })
 
   Bun.serve(

@@ -13,9 +13,11 @@ const defaultQuery = /* GraphQL */ `query {
 export async function main() {
   const modules = import.meta.glob('/types/**/*.ts')
   const context = import.meta.glob('/_context.ts')
+  const yogaPluginsFile = import.meta.glob('/_yoga-plugins.ts', { eager: true })
 
   const promises: Array<any> = []
-  let ctx
+  let ctx, yogaPlugins
+
   if (context['/_context.ts']) {
     promises.push(
       context['/_context.ts']().then((mod) => {
@@ -24,6 +26,13 @@ export async function main() {
         }
       }),
     )
+  }
+
+  if (yogaPluginsFile['/_yoga-plugins.ts']) {
+    const mod = yogaPluginsFile['/_yoga-plugins.ts']
+    if ((mod as any).getYogaPlugins) {
+      yogaPlugins = (mod as any).getYogaPlugins
+    }
   }
 
   for (const path in modules) {
@@ -43,7 +52,7 @@ export async function main() {
     },
     batching: true,
     context: wrappedContext(ctx),
-    plugins: getYogaPlugins(),
+    plugins: getYogaPlugins(yogaPlugins),
   })
 
   ;(yoga as any).stringifiedSchema = printSchema(completedSchema)

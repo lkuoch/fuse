@@ -45,7 +45,7 @@ export function createAPIRouteHandler<
 
       // Yoga needs to know how to create a valid Next response
       fetchAPI: { Response },
-      plugins: getYogaPlugins(options?.stellate),
+      plugins: getYogaPlugins(),
     })
 
     return handleRequest(request, context)
@@ -79,6 +79,6 @@ export function createPagesRouteHandler<
     batching: true,
     context: wrappedContext(options?.context),
     graphqlEndpoint: '/api/fuse',
-    plugins: getYogaPlugins(options?.stellate),
+    plugins: getYogaPlugins(),
   })
 }

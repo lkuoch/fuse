@@ -23,11 +23,21 @@ export interface StellateOptions {
   serviceName: string
 }
 
-export const getYogaPlugins = (stellate?: StellateOptions): Plugin[] => {
+export const getYogaPlugins = (
+  getPluginsCallback?: () => Plugin[],
+): Plugin[] => {
+  const additionalPlugins = getPluginsCallback?.() ?? []
+
+  /* TODO(@lkuoch): Remove */ console.log(
+    '⌦ 🥐 loading yoga plugins',
+    additionalPlugins,
+  )
+
   return [
     useDeferStream(),
     process.env.NODE_ENV === 'production' && useDisableIntrospection(),
     process.env.NODE_ENV === 'production' && blockFieldSuggestionsPlugin(),
+    ...additionalPlugins,
   ].filter(Boolean) as Plugin[]
 }
 
