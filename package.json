@@ -1,27 +1,72 @@
 {
   "name": "fuse",
-  "private": true,
+  "version": "0.12.1",
+  "description": "The magical GraphQL framework",
+  "homepage": "https://github.com/StellateHQ/fuse",
+  "bugs": "https://github.com/StellateHQ/fuse/issues",
+  "license": "MIT",
+  "author": "Stellate engineering <eng@stellate.co>",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StellateHQ/fuse",
+    "directory": "packages/core"
+  },
   "scripts": {
-    "build": "pnpm --filter fuse build && pnpm --filter create-fuse-app build",
-    "dev": "pnpm --filter @fuse-examples/spacex dev",
-    "website": "pnpm --filter @fuse/website dev"
+    "build": "tsup",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "module": "dist/builder.mjs",
+  "main": "dist/builder.js",
+  "types": "dist/builder.d.ts",
+  "bin": "dist/cli.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/builder.d.ts",
+      "import": "./dist/builder.mjs",
+      "require": "./dist/builder.js"
+    },
+    "./dev": {
+      "import": "./dist/dev.mjs",
+      "require": "./dist/dev.mjs"
+    }
+  },
+  "dependencies": {
+    "@escape.tech/graphql-armor-block-field-suggestions": "^2.1.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@graphql-yoga/plugin-defer-stream": "^3.0.0",
+    "@graphql-yoga/plugin-disable-introspection": "^2.0.0",
+    "@parcel/watcher": "^2.4.0",
+    "@pothos/core": "^3.38.0",
+    "@pothos/plugin-dataloader": "^3.17.1",
+    "@pothos/plugin-relay": "^3.44.0",
+    "@pothos/plugin-scope-auth": "^3.20.0",
+    "@urql/core": "^4.2.3",
+    "@urql/introspection": "^1.0.3",
+    "@urql/next": "^1.1.1",
+    "aws-lambda": "^1.0.7",
+    "dataloader": "^2.2.2",
+    "graphql": "^16.8.1",
+    "graphql-scalars": "^1.22.4",
+    "graphql-yoga": "^5.0.0",
+    "sade": "^1.8.1",
+    "stellate": "^2.7.1",
+    "urql": "^4.0.6",
+    "vite": "^5.0.6",
+    "vite-plugin-node": "^3.1.0",
+    "wonka": "^6.3.4"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.1.0",
-    "prettier": "^3.1.0",
-    "typescript": "^5.2.2"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "semi": false,
-    "printWidth": 80
-  },
-  "lint-staged": {
-    "*.{mjs,js,jsx,ts,tsx,json,md,graphql}": "prettier --write"
+    "@types/bun": "^1.0.1",
+    "@types/node": "^20.8.10",
+    "@types/react": "^18",
+    "execa": "^8.0.1",
+    "next": "14.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "vitest": "^1.0.0"
   }
 }

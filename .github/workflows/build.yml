@@ -14,25 +14,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: '18' # Use the appropriate Node.js version
-
-      - name: Install PNPM
-        run: npm install -g pnpm
+          bun-version: latest
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Build project
-        run: pnpm run build
+        run: bun run build
 
       - name: Create Tarball
         run: |
           mkdir ./temp_package
-          cp -r ./packages/core/dist ./temp_package/
-          cp ./packages/core/package.json ./packages/core/rsc.d.ts ./packages/core/client.d.ts ./packages/core/loader.js ./temp_package/
+          cp -r ./dist ./package.json ./temp_package/
           tar -czf fuse.tar.gz -C ./temp_package .
           rm -rf ./temp_package
 
