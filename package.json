@@ -1,27 +1,60 @@
 {
   "name": "fuse",
-  "private": true,
+  "type": "module",
+  "version": "0.12.1",
+  "description": "The magical GraphQL framework",
+  "homepage": "https://github.com/StellateHQ/fuse",
+  "bugs": "https://github.com/StellateHQ/fuse/issues",
+  "license": "MIT",
+  "author": "Stellate engineering <eng@stellate.co>",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StellateHQ/fuse",
+    "directory": "packages/core"
+  },
   "scripts": {
-    "build": "pnpm --filter fuse build && pnpm --filter create-fuse-app build",
-    "dev": "pnpm --filter @fuse-examples/spacex dev",
-    "website": "pnpm --filter @fuse/website dev"
+    "build": "tsup",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "module": "dist/builder.js",
+  "main": "dist/builder.js",
+  "types": "dist/builder.d.ts",
+  "bin": "dist/cli.js",
+  "exports": {
+    ".": {
+      "types": "./dist/builder.d.ts",
+      "import": "./dist/builder.js"
+    },
+    "./dev": {
+      "import": "./dist/dev.js"
+    }
+  },
+  "dependencies": {
+    "@escape.tech/graphql-armor-block-field-suggestions": "2.2.0",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/client-preset": "4.3.3",
+    "@graphql-typed-document-node/core": "3.2.0",
+    "@graphql-yoga/plugin-defer-stream": "3.7.0",
+    "@graphql-yoga/plugin-disable-introspection": "2.7.0",
+    "@pothos/core": "4.2.0",
+    "@pothos/plugin-dataloader": "4.1.0",
+    "@pothos/plugin-relay": "4.1.0",
+    "@pothos/plugin-scope-auth": "4.1.0",
+    "@urql/core": "5.0.6",
+    "dataloader": "2.2.2",
+    "graphql": "16.9.0",
+    "graphql-scalars": "1.23.0",
+    "graphql-yoga": "5.7.0",
+    "sade": "1.8.1",
+    "vite": "5.4.2",
+    "vite-plugin-node": "3.1.0",
+    "wonka": "6.3.4"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.1.0",
-    "prettier": "^3.1.0",
-    "typescript": "^5.2.2"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "semi": false,
-    "printWidth": 80
-  },
-  "lint-staged": {
-    "*.{mjs,js,jsx,ts,tsx,json,md,graphql}": "prettier --write"
+    "@types/bun": "1.1.8",
+    "tsup": "8.2.4",
+    "typescript": "5.5.4"
   }
 }

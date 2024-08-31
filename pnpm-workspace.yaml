@@ -1,6 +1,0 @@
-packages:
-  - 'examples/*'
-  - 'packages/core'
-  - 'packages/core/test/fixtures/*'
-  - 'packages/create-fuse-app'
-  - 'website'
